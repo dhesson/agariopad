@@ -18,7 +18,7 @@ I'm currently working on Chrome support.  The code that is written should be cro
 
 #### Firefox
 - Install [Greasemonkey] extension for FireFox.
-- Copy the script from 
+- Copy the [controller script]
 - Click Greasemonkey button -> Add New Script
 - Click 'User Script From Clipboard'
 
@@ -35,4 +35,5 @@ I'm currently working on Chrome support.  The code that is written should be cro
 
 [agar.io]: http://agar.io
 [controller driver]: https://goo.gl/y2Iu0X
+[controller script]: https://github.com/dhesson/agariopad/blob/master/agario_controller.js
 [Greasemonkey]: https://addons.mozilla.org/en-us/firefox/addon/greasemonkey/
