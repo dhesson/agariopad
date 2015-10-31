@@ -25,7 +25,7 @@ I'm currently working on Chrome support.  The code that is written should be cro
 #### Chrome
 - Currently not supported
 
-#### Upcoming Changes/Feature Support
+# Upcoming Changes/Feature Support
 - Verify Xbox 360 controller works (wired)
 - Add support for PS3 controller
 - Figure out whats wrong with Chrome (driver or browser issue?  try canary version)
