@@ -1,26 +1,32 @@
 // ==UserScript==
 // @name         Agar.io Gamepad Script for Xbox One Controller
-// @description  Based on WASD script by ProfessorTag and contributors
+// @description  Based on a script I found in Reddit
 // @version      0.1
 // @match        http://agar.io/
 // @grant        none
 // ==/UserScript==
 
-// Set your player name here.
+/**
+ * Set your player name here (or other game settings)
+ */
 var playerName = "TheWan";
+var useDarkTheme = false;
+var showMyMass = true;
 
-// Get canvas and create an object with (fake) mouse position properties.
-var canvas = document.getElementById("canvas");
+/**
+ * Controller impl
+ */
 var endPoint = {
     clientX: innerWidth / 2,
     clientY: innerHeight / 2
 };
-var currentGamepad;
-var pressedButtons = [];
 var holdMoveEvent = null;
 var lastStickMag = 0;
 var last_x = 0;
 var last_y = 0;
+var canvas = null;
+var shouldDeject = false;
+var stopSplitting = false;
 
 var gamepadAPI = {
     controller: {},
@@ -119,13 +125,19 @@ jQuery.fn.simulateKeyUp = function(character) {
     });
 };
 
+jQuery.fn.simulateCanvasDown = function(coords) {
+    if (canvas) {
+        jQuery("#canvas").trigger("mousedown", coords);        
+    }
+}
+
 // Stop the default mouse move behavior.
-(function nullMouseMove(startTime) {
-    if (Date.now() - startTime > 5000) return;
-    if (!canvas.onmousemove) return setTimeout(nullMouseMove, 0, startTime);
-    holdMoveEvent = canvas.onmousemove;
-    canvas.onmousemove = null;
-})(Date.now());
+// (function nullMouseMove(startTime) {
+//     if (Date.now() - startTime > 5000) return;
+//     if (!canvas.onmousemove) return setTimeout(nullMouseMove, 0, startTime);
+//     holdMoveEvent = canvas.onmousemove;
+//     canvas.onmousemove = null;
+// })(Date.now());
 
 function canGame() {
     return "getGamepads" in navigator;
@@ -154,6 +166,8 @@ $(document).ready(function() {
         return;
     }
 
+    useThis = $("#canvas");    
+
     $(window).on('keydown', function(event) {
         if (event.repeat && event.type === "keydown") return;
 
@@ -174,43 +188,18 @@ $(document).ready(function() {
             clientX: innerWidth / 2,
             clientY: innerHeight / 2
         };
-        //canvas.onmousedown(endPoint);
+        var e = jQuery.Event("mousedown", endPoint);
+        useThis.trigger(e);
     });
 
-    // $("#helloDialog #playBtn").click(function() {
-    //     if (gamepadIndex < 0)
-    //         canvas.onmousemove = holdMoveEvent;
-    // });
-
-    // $("#helloDialog #region").parent().after('<div class="form-group"><select id="gamepads" class="form-control"><option value="-1" class="mkb">Mouse &amp; Keyboard</option></select></div>');
-
-    // $("#gamepads").change(function() {
-    //     gamepadIndex = $("#gamepads").val();
-
-    //     if (gamepadIndex >= 0)
-    //         currentGamepad = navigator.getGamepads()[gamepadIndex];
-    // });
-
-    // $(window).on("gamepadconnected", function(e) {
-    //     console.log("A new gamepad was connected!")
-    //     refreshGamepadList();
-    // });
-
-    // $(window).on('gamepaddisconnected', function(e) {
-    //     refreshGamepadList();
-    // });
-
-    //refreshGamepadList();
+    // Configure the game settings
+    setShowMass(showMyMass);
+    setDarkTheme(useDarkTheme);
 
     checkForGamepad();
 
     requestAnimationFrame(handleGamepadLoop);
 });
-
-var shouldDeject = false;
-var stopSplitting = false;
-
-var useThis = $("#canvas");
 
 function handleGamepadLoop() {
     setTimeout(handleGamepadLoop, 15);
