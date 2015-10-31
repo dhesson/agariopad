@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Agar.io Gamepad Script for Xbox One Controller
-// @description  Based on a script I found in Reddit
+// @description  Thx reddit.  I rewrote most of it.
 // @version      0.1
 // @match        http://agar.io/
 // @grant        none
