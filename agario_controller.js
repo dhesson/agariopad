@@ -24,7 +24,7 @@ var holdMoveEvent = null;
 var lastStickMag = 0;
 var last_x = 0;
 var last_y = 0;
-var canvas = null;
+var canvas = { simulateCanvasDown: function(){} };
 var shouldDeject = false;
 var stopSplitting = false;
 
@@ -126,9 +126,7 @@ jQuery.fn.simulateKeyUp = function(character) {
 };
 
 jQuery.fn.simulateCanvasDown = function(coords) {
-    if (canvas) {
-        jQuery("#canvas").trigger("mousedown", coords);        
-    }
+    jQuery(this).trigger(jQuery.Event("mousedown", coords));
 }
 
 // Stop the default mouse move behavior.
@@ -166,7 +164,7 @@ $(document).ready(function() {
         return;
     }
 
-    useThis = $("#canvas");    
+    canvas = $("#canvas");    
 
     $(window).on('keydown', function(event) {
         if (event.repeat && event.type === "keydown") return;
@@ -188,8 +186,7 @@ $(document).ready(function() {
             clientX: innerWidth / 2,
             clientY: innerHeight / 2
         };
-        var e = jQuery.Event("mousedown", endPoint);
-        useThis.trigger(e);
+        canvas.simulateCanvasDown(endPoint);
     });
 
     // Configure the game settings
@@ -239,9 +236,7 @@ function handleGamepadLoop() {
     };
     mouseLoc.clientX += x_result;
     mouseLoc.clientY += y_result;
-
-    var e = jQuery.Event("mousedown", mouseLoc);
-    useThis.trigger(e);
+    canvas.simulateCanvasDown(mouseLoc);        
 
     // A for Split, X for W
     var shouldSplit = gamepadAPI.buttonPressed("A");
