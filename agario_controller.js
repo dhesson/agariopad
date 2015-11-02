@@ -144,7 +144,7 @@ function canGame() {
 function checkForGamepad() {
     var gamepadList = navigator.getGamepads();
 
-    console.log(gamepadList);
+    //console.log(gamepadList);
 
     for (var i = 0; i < gamepadList.length; i++) {
         var gamepad = gamepadList[i];
@@ -200,6 +200,8 @@ $(document).ready(function() {
 
 function handleGamepadLoop() {
     setTimeout(handleGamepadLoop, 15);
+    
+    checkForGamepad();
 
     if (!gamepadAPI.turbo) {
         return;
@@ -238,9 +240,9 @@ function handleGamepadLoop() {
     mouseLoc.clientY += y_result;
     canvas.simulateCanvasDown(mouseLoc);        
 
-    // A for Split, X for W
-    var shouldSplit = gamepadAPI.buttonPressed("A");
-    var shouldEject = gamepadAPI.buttonPressed("X") || gamepadAPI.buttonPressed("B");
+    // A to inject, X to split (eat)
+    var shouldSplit = gamepadAPI.buttonPressed("X") || gamepadAPI.buttonPressed("DPad-Left");
+    var shouldEject = gamepadAPI.buttonPressed("A") || gamepadAPI.buttonPressed("DPad-Up");
 
     if (shouldEject) {
         $(window).simulateKeyDown(87);
@@ -258,7 +260,7 @@ function handleGamepadLoop() {
         stopSplitting = false;
     }
 
-    if (gamepadAPI.buttonPressed("Start")) {
+    if (gamepadAPI.buttonPressed("Start") || gamepadAPI.buttonPressed("RB")) {
         console.log("Starting new game.");
         var statsContinue = $("#statsContinue");
         if (statsContinue) {
